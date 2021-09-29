@@ -5,7 +5,7 @@ import {
 } from "./src/exercise_1/exercise_1";
 import { constants } from "./src/utils/constants";
 import {
-  countriesEuropeanUnion,
+  CountriesEuropeanUnion,
   checkHighPopulation
 } from "./src/exercise_2/exercise_2";
 import { EuropeUnionCountries } from "./src/types";
@@ -16,7 +16,7 @@ if (checkValidateCondition(dataFromStorage, constants)) {
   fetchCountryList(dataFromStorage, constants);
 }
 
-const countriesEu = new countriesEuropeanUnion(
+const countriesEu = new CountriesEuropeanUnion(
   countryList
 );
 
@@ -30,5 +30,5 @@ console.log(
     .europeanUnionCountries()
     .countriesWithoutLetterA()
     .sortByPopulation()
-    .sumCountriesPopulation().populationSum
+    .sumCountriesPopulation().sumPopulation
 );

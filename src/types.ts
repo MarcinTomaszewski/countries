@@ -26,9 +26,9 @@ export interface StorageServices {
 }
 
 export interface EuropeUnionCountries {
-  populationSum: number;
+  sumPopulation: number;
   countryList: CountryList[];
-  result: null | CountryList[] | number;
+  result: CountryList[];
   europeanUnionCountries(): this;
   countriesWithoutLetterA(): this;
   sortByPopulation(): this;
