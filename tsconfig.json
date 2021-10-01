@@ -1,17 +1,24 @@
 {
   "compilerOptions": {
-    "strict": true,
-    "module": "commonjs",
-    "jsx": "preserve",
-    "esModuleInterop": true,
-    // "sourceMap": true,
+    "noImplicitAny": true,
+    "outDir": "build/types",
+    "module": "esnext",
+    "target": "es5",
     "allowJs": true,
+    "sourceMap": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "suppressImplicitAnyIndexErrors": true,
     "lib": [
-      "es5",
+      "es2018",
       "dom"
     ],
-    // "outDir": "dist",
-    // "baseUrl": "src",
-    "moduleResolution": "node"
-  }
+    "moduleResolution": "node",
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "src/**/tests"
+  ],
 }
