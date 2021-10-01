@@ -1,7 +1,7 @@
 export interface CountryList {
-  population: number;
   name: string;
-  regionalBlocs: [{ acronym: string }];
+  population: number;
+  regionalBlocs?: { acronym: string }[];
 }
 
 export interface Storage {
@@ -10,12 +10,12 @@ export interface Storage {
 }
 
 export interface Constants {
-  COUNTRY_KEY: string;
-  TIME_KEY: string;
-  API_URL: string;
+  COUNTRY_KEY?: string;
+  TIME_KEY?: string;
+  API_URL?: string;
   TIME_SEVEN_DAYS: number;
   CURRENT_TIME: number;
-  BORDER_POPULATION: number;
+  BORDER_POPULATION?: number;
 }
 
 export interface StorageServices {
@@ -27,20 +27,11 @@ export interface StorageServices {
 
 export interface EuropeUnionCountries {
   sumPopulation: number;
-  countryList: CountryList[];
   result: CountryList[];
+  getResultCountries(): CountryList[];
+  getSumPopulation(): number;
   europeanUnionCountries(): this;
   countriesWithoutLetterA(): this;
   sortByPopulation(): this;
   sumCountriesPopulation(): this;
 }
-
-// For test.ts
-// export interface EuropeUnionCountries {
-//   countryList: null | CountryList[];
-//   result: null | CountryList[] | number;
-//   europeanUnionCountries(arr?: CountryList[]): this;
-//   countriesWithoutLetterA(arr?: CountryList[]): this;
-//   sortByPopulation(arr?: CountryList[]): this;
-//   sumCountriesPopulation(arr?: CountryList[]): this;
-// }
