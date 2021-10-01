@@ -2,7 +2,7 @@ export interface CountryList {
   name: string;
   population: number;
   regionalBlocs?: { acronym: string }[];
-  area: number;
+  area?: number;
 }
 
 export interface Storage {

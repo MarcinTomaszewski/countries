@@ -2,9 +2,9 @@ import { CountriesEuropeanUnion } from "../exercise_2";
 
 test("sort countries by population size so that the largest is first", () => {
   const countriesTest = [
-    { name: "Czech", population: 900, regionalBlocs: [{ acronym: "EU" }] },
-    { name: "Belgium", population: 2000, regionalBlocs: [{ acronym: "EU" }] },
-    { name: "Swiden", population: 3400, regionalBlocs: [{ acronym: "EU" }] }
+    { name: "Czech", population: 900, regionalBlocs: [{ acronym: "EU" }], area: 1000 },
+    { name: "Belgium", population: 2000, regionalBlocs: [{ acronym: "EU" }], area: 2000 },
+    { name: "Swiden", population: 3400, regionalBlocs: [{ acronym: "EU" }], area: 3000 }
   ];
 
   const countries = new CountriesEuropeanUnion(countriesTest);

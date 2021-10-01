@@ -2,16 +2,12 @@ import { CountriesEuropeanUnion } from "../exercise_2";
 
 describe("sum of the population of countries", () => {
   const countriesTest = [
-    { name: "Czech", population: 900, regionalBlocs: [{ acronym: "EU" }] },
-    { name: "Belgium", population: 2000, regionalBlocs: [{ acronym: "EU" }] },
-    { name: "Swiden", population: 3400, regionalBlocs: [{ acronym: "EU" }] },
-    { name: "Greece", population: 6400, regionalBlocs: [{ acronym: "EU" }] },
-    {
-      name: "Luxembourg",
-      population: 1400,
-      regionalBlocs: [{ acronym: "EU" }]
-    },
-    { name: "Cyprus", population: 3400, regionalBlocs: [{ acronym: "EU" }] }
+    { name: "Czech", population: 900, regionalBlocs: [{ acronym: "EU" }], area: 3000 },
+    { name: "Belgium", population: 2000, regionalBlocs: [{ acronym: "EU" }], area: 5000 },
+    { name: "Swiden", population: 3400, regionalBlocs: [{ acronym: "EU" }], area: 4000 },
+    { name: "Greece", population: 6400, regionalBlocs: [{ acronym: "EU" }], area: 2300 },
+    { name: "Luxembourg", population: 1400, regionalBlocs: [{ acronym: "EU" }], area: 980 },
+    { name: "Cyprus", population: 3400, regionalBlocs: [{ acronym: "EU" }], area: 1100 }
   ];
 
   test("sum of the population of countries when there are more than 5", () => {
