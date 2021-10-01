@@ -30,9 +30,7 @@ if (countryList) {
       .europeanUnionCountries()
       .countriesWithoutLetterA()
       .sortByPopulation()
-      .sumCountriesPopulation().sumPopulation
+      .sumCountriesPopulation().getSumPopulation()
   );
 }
-
-
 
