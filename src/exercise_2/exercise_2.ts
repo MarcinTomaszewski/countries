@@ -14,15 +14,10 @@ export class CountriesEuropeanUnion implements EuropeUnionCountries {
     return this.sumPopulation;
   }
   europeanUnionCountries() {
-    let countries = [];
-    for (let i = 0; i < this.countryList.length; i++) {
-      if (
-        this.countryList[i].regionalBlocs &&
-        this.countryList[i].regionalBlocs[0].acronym === "EU"
-      ) {
-        countries.push(this.countryList[i]);
-      }
-    }
+    let countries = this.countryList.filter(
+      (country) =>
+        country.regionalBlocs && country.regionalBlocs[0].acronym === "EU"
+    );
     this.result = countries;
     return this;
   };
@@ -36,7 +31,7 @@ export class CountriesEuropeanUnion implements EuropeUnionCountries {
 
   sortByPopulation() {
     this.result = this.result.sort(
-      (a: CountryList, b: CountryList) => b.population - a.population
+      (a: CountryList, b: CountryList) => b.population / b.area - a.population / a.area
     );
     return this;
   };
@@ -57,7 +52,7 @@ export const checkHighPopulation = (
     .europeanUnionCountries()
     .countriesWithoutLetterA()
     .sortByPopulation()
-    .sumCountriesPopulation().sumPopulation;
+    .sumCountriesPopulation().getSumPopulation();
 
   return population > num;
 };
