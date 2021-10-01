@@ -8,7 +8,6 @@ import {
   CountriesEuropeanUnion,
   checkHighPopulation
 } from "./src/exercise_2/exercise_2";
-import { EuropeUnionCountries } from "./src/types";
 const { countryList } = dataFromStorage;
 const { BORDER_POPULATION } = constants;
 
@@ -20,15 +19,20 @@ const countriesEu = new CountriesEuropeanUnion(
   countryList
 );
 
-console.log(
-  "Czy suma populacji jest większa od 500mln: ",
-  checkHighPopulation(countriesEu, BORDER_POPULATION)
-);
+if (countryList) {
+  console.log(
+    "Czy suma populacji jest większa od 500mln: ",
+    checkHighPopulation(countriesEu, BORDER_POPULATION)
+  );
 
-console.log(
-  countriesEu
-    .europeanUnionCountries()
-    .countriesWithoutLetterA()
-    .sortByPopulation()
-    .sumCountriesPopulation().sumPopulation
-);
+  console.log(
+    countriesEu
+      .europeanUnionCountries()
+      .countriesWithoutLetterA()
+      .sortByPopulation()
+      .sumCountriesPopulation().sumPopulation
+  );
+}
+
+
+
