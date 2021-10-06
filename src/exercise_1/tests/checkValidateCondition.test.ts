@@ -16,7 +16,7 @@ describe("check the conditions of data download", () => {
 
   test("check localstorage is full", () => {
     const storage = {
-      countryList: [{ name: "Poland", population: 400 }],
+      countryList: [{ name: "Poland", population: 400, area: 12500 }],
       time: 3
     };
 
@@ -29,7 +29,7 @@ describe("check the conditions of data download", () => {
 
   test("check if more than seven days have passed", () => {
     const storage = {
-      countryList: [{ name: "Poland", population: 400 }],
+      countryList: [{ name: "Poland", population: 400, area: 12500 }],
       time: 1
     };
 
@@ -42,7 +42,7 @@ describe("check the conditions of data download", () => {
 
   test("check if less than seven days have passed", () => {
     const storage = {
-      countryList: [{ name: "Poland", population: 400 }],
+      countryList: [{ name: "Poland", population: 400, area: 12500 }],
       time: 5
     };
 
@@ -55,7 +55,7 @@ describe("check the conditions of data download", () => {
 
   test("exactly seven days passed", () => {
     const storage = {
-      countryList: [{ name: "Poland", population: 400 }],
+      countryList: [{ name: "Poland", population: 400, area: 12500 }],
       time: 5
     };
 
