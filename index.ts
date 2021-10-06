@@ -1,36 +1,25 @@
 import {
   checkValidateCondition,
-  fetchCountryList,
-  dataFromStorage
+  fetchCountryList
 } from "./src/exercise_1/exercise_1";
-import { constants } from "./src/utils/constants";
-import {
-  CountriesEuropeanUnion,
-  checkHighPopulation
-} from "./src/exercise_2/exercise_2";
-const { countryList } = dataFromStorage;
-const { BORDER_POPULATION } = constants;
+import constants from "./src/utils/constants";
+import dataFromStorage from "./src/dataStorage";
+import { checkHighProperty } from "./src/exercise_2/exercise_2";
+import { servicesCountryList, servicesCountryListKey } from './src/utils/servicesCountryList';
 
 if (checkValidateCondition(dataFromStorage, constants)) {
   fetchCountryList(dataFromStorage, constants);
 }
 
-const countriesEu = new CountriesEuropeanUnion(
-  countryList
-);
+const inputArrKeys = Array.from(document.querySelectorAll('.countriesKeys'));
+const btnGetResult = document.getElementById('getResult');
+const result = document.getElementById('result');
 
-if (countryList) {
-  console.log(
-    "Czy suma populacji jest większa od 500mln: ",
-    checkHighPopulation(countriesEu, BORDER_POPULATION)
-  );
-
-  console.log(
-    countriesEu
-      .europeanUnionCountries()
-      .countriesWithoutLetterA()
-      .sortByPopulation()
-      .sumCountriesPopulation().getSumPopulation()
-  );
-}
-
+btnGetResult.addEventListener('click', () => {
+  if (inputArrKeys.every(input => input.value)) {
+    inputArrKeys.forEach(input => servicesCountryListKey[input.id] = input.value);
+  }
+  console.log('Obiekt servicesCountryList: ', servicesCountryListKey)
+  const highProperty = checkHighProperty(dataFromStorage, servicesCountryList, servicesCountryListKey);
+  result.innerText = `Czy suma ${servicesCountryListKey.property} jest większa od ${servicesCountryListKey.border}: ${highProperty}`
+});
