@@ -1,58 +1,14 @@
-import { CountryList, EuropeUnionCountries } from "../types";
+import { Storage, ServicesKeys, ServicesCountries } from "../types";
 
-export class CountriesEuropeanUnion implements EuropeUnionCountries {
-  constructor(private countryList: CountryList[]) { }
+export const checkHighProperty = (dataStorage: Storage, services: ServicesCountries, keys: ServicesKeys): boolean => {
+  const { countryList } = dataStorage;
+  const { getCountriesFromRegional, getCountriesWithoutLetter, sortByProperty, sumByProperty } = services;
+  const { regional, letter, property, numCountries, border } = keys;
 
-  result: CountryList[] = [];
-  sumPopulation = 0;
+  const countriesRegional = getCountriesFromRegional(countryList, regional);
+  const countriesWithoutLetter = getCountriesWithoutLetter(countriesRegional, letter);
+  const sortCountries = sortByProperty(countriesWithoutLetter, property);
+  const sumPopulation = sumByProperty(sortCountries, numCountries, property);
 
-  getResultCountries(): CountryList[] {
-    return this.result;
-  }
-
-  getSumPopulation(): number {
-    return this.sumPopulation;
-  }
-  europeanUnionCountries() {
-    let countries = this.countryList.filter(
-      (country) =>
-        country.regionalBlocs && country.regionalBlocs[0].acronym === "EU"
-    );
-    this.result = countries;
-    return this;
-  };
-
-  countriesWithoutLetterA() {
-    this.result = this.result.filter(
-      (country: CountryList) => !country.name.includes("a")
-    );
-    return this;
-  };
-
-  sortByPopulation() {
-    this.result = this.result.sort(
-      (a: CountryList, b: CountryList) => b.population / b.area - a.population / a.area
-    );
-    return this;
-  };
-  sumCountriesPopulation() {
-    this.sumPopulation = this.result
-      .slice(0, 5)
-      .map((country: CountryList) => country.population)
-      .reduce((a: number, b: number) => a + b);
-    return this;
-  };
+  return sumPopulation > border;
 }
-
-export const checkHighPopulation = (
-  obj: EuropeUnionCountries,
-  num: number
-): boolean => {
-  const population: number = obj
-    .europeanUnionCountries()
-    .countriesWithoutLetterA()
-    .sortByPopulation()
-    .sumCountriesPopulation().getSumPopulation();
-
-  return population > num;
-};
