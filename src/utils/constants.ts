@@ -1,6 +1,6 @@
 import { Constants } from "../types";
 
-export const constants: Constants = {
+const constants: Constants = {
   COUNTRY_KEY: "countryList",
   TIME_KEY: "time",
   API_URL: "https://restcountries.com/v2/all",
@@ -8,3 +8,5 @@ export const constants: Constants = {
   CURRENT_TIME: new Date().getTime(),
   BORDER_POPULATION: 500_000_000
 };
+
+export default constants;
