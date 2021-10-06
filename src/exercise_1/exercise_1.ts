@@ -1,16 +1,9 @@
 import { CountryList, Storage, Constants } from "../types";
-import { constants } from "../utils/constants";
-import { localStore } from "../services/localStorage";
+import constants from "../utils/constants";
+import localStore from "../services/localStorage";
 
-const { TIME_KEY, COUNTRY_KEY } = constants;
-const { get, set } = localStore;
-
-const list = get(COUNTRY_KEY);
-
-export const dataFromStorage: Storage = {
-  time: Number(get(TIME_KEY)),
-  countryList: list ? JSON.parse(list) : undefined
-};
+const { TIME_KEY } = constants;
+const { set } = localStore;
 
 export const checkChangesInCountries = (
   currentData: CountryList[],
