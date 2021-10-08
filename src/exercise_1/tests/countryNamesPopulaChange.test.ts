@@ -1,9 +1,5 @@
 import { countryNamesPopulaChange } from "../exercise_1";
-const currentData = [
-  { name: "Poland", population: 400, area: 12500 },
-  { name: "England", population: 800, area: 23600 },
-  { name: "Italy", population: 300, area: 18500 }
-];
+import { currentDataChangeNames } from "./dataForTestExe1";
 describe("population change in countries", () => {
   test("all countries have changed in population", () => {
     const prevData = [
@@ -11,7 +7,7 @@ describe("population change in countries", () => {
       { name: "England", population: 100, area: 23600 },
       { name: "Italy", population: 100, area: 18500 }
     ];
-    const countryListTest = countryNamesPopulaChange(currentData, prevData);
+    const countryListTest = countryNamesPopulaChange(currentDataChangeNames, prevData);
 
     expect(countryListTest).toContain("England");
     expect(countryListTest).toHaveLength(3);
@@ -25,7 +21,7 @@ describe("population change in countries", () => {
       { name: "Italy", population: 100, area: 18500 }
     ];
 
-    expect(countryNamesPopulaChange(currentData, prevData)).toContain("Italy");
+    expect(countryNamesPopulaChange(currentDataChangeNames, prevData)).toContain("Italy");
   });
 
   test("no country has changed in population", () => {
@@ -35,6 +31,6 @@ describe("population change in countries", () => {
       { name: "Italy", population: 300, area: 18500 }
     ];
 
-    expect(countryNamesPopulaChange(currentData, prevData)).toEqual([]);
+    expect(countryNamesPopulaChange(currentDataChangeNames, prevData)).toEqual([]);
   });
 });

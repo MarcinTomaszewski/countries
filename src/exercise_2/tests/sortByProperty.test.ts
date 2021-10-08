@@ -1,30 +1,30 @@
 import { servicesCountryList } from "../../utils/servicesCountryList";
-
+import { countryListForSort } from "./dataForTestExe2";
 const { sortByProperty } = servicesCountryList;
 
-const countryList = [
-  { name: "Czech", population: 900, regionalBlocs: [{ acronym: "EU" }], area: 1000 },
-  { name: "Belgium", population: 2000, regionalBlocs: [{ acronym: "EU" }], area: 2000 },
-  { name: "Swiden", population: 3400, regionalBlocs: [{ acronym: "EU" }], area: 3000 }
-];
+const firstCountries: [string, string][] = [['population', 'Swiden'], ['area', 'Belgium']];
+const lastCountries: [string, string][] = [['population', 'Czech'], ['area', 'Czech']];
 
 describe('sort countries by propety', () => {
-  test("sort countries by population size so that the largest is first", () => {
+  test.each(firstCountries)(
+    'Given property %p as argument, return first country name %p', (property, expected) => {
+      const result = sortByProperty(countryListForSort, property);
+      expect(result[0].name).toBe(expected);
+    }
+  )
+
+  test.each(lastCountries)(
+    'Given property %p as argument, return last country name %p', (property, expected) => {
+      const result = sortByProperty(countryListForSort, property);
+      //Funkcja at() nie działa. Pewnie trzeba pogrzebać w konfiguracji. 
+      //expect(result.at(-1).name).toBe(expectedResult);
+      expect(result[result.length - 1].name).toBe(expected);
+    }
+  )
+
+  test('length array should be the same as countryList', () => {
     const property = 'population';
-    const countries = sortByProperty(countryList, property);
-
-    expect(countryList[0].name).toBe("Swiden");
-    expect(countryList[countryList.length - 1].name).toBe("Czech");
-    expect(countryList).toHaveLength(countries.length);
-  });
-
-  test("sort countries by area size so that the largest is first", () => {
-    const property = 'area';
-    const countries = sortByProperty(countryList, property);
-
-    expect(countryList[0].name).toBe("Swiden");
-    expect(countryList[countryList.length - 1].name).toBe("Czech");
-    expect(countryList).toHaveLength(countries.length);
-  });
-})
-
+    const result = sortByProperty(countryListForSort, property);
+    expect(result).toHaveLength(countryListForSort.length);
+  })
+});

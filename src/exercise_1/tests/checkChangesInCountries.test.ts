@@ -1,9 +1,5 @@
 import { checkChangesInCountries } from "../exercise_1";
-const currentData = [
-  { name: "Poland", population: 400, area: 24700 },
-  { name: "England", population: 800, area: 35600 },
-  { name: "Italy", population: 300, area: 14598 }
-];
+import { currentDataCheckChanges } from "./dataForTestExe1";
 describe("checking for changes in countries", () => {
   test("data not changed", () => {
     const prevData = [
@@ -11,8 +7,8 @@ describe("checking for changes in countries", () => {
       { name: "England", population: 800, area: 35600 },
       { name: "Italy", population: 300, area: 14598 }
     ];
-    expect(checkChangesInCountries(currentData, prevData)).toStrictEqual(
-      currentData
+    expect(checkChangesInCountries(currentDataCheckChanges, prevData)).toStrictEqual(
+      currentDataCheckChanges
     );
   });
 
@@ -23,7 +19,7 @@ describe("checking for changes in countries", () => {
       { name: "Italy", population: 100, area: 14598 }
     ];
 
-    expect(checkChangesInCountries(currentData, prevData)).toStrictEqual(
+    expect(checkChangesInCountries(currentDataCheckChanges, prevData)).toStrictEqual(
       prevData
     );
   });
@@ -35,7 +31,7 @@ describe("checking for changes in countries", () => {
       { name: "Italy", population: 800, area: 14598 }
     ];
 
-    expect(checkChangesInCountries(currentData, prevData)).toStrictEqual(
+    expect(checkChangesInCountries(currentDataCheckChanges, prevData)).toStrictEqual(
       prevData
     );
   });
