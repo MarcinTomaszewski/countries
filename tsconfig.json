@@ -9,6 +9,8 @@
     "declaration": true,
     "emitDeclarationOnly": true,
     "suppressImplicitAnyIndexErrors": true,
+    "esModuleInterop": true,
+    // "strict": true,
     "lib": [
       "es2018",
       "dom"
