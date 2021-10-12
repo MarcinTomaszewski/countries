@@ -52,19 +52,18 @@ const checkPropertyRepeats = (country: CountryList, region: string, property: st
 }
 
 const checkAndSaveLanguages = (country: CountryList, region: string) => {
-  let test = countriesFromRegions[region].languages[country.languages[0].iso639_1];
-  if (!test) {
-    test = {
+  if (!countriesFromRegions[region].languages[country.languages[0].iso639_1]) {
+    countriesFromRegions[region].languages[country.languages[0].iso639_1] = {
       countries: [],
       population: 0,
       area: 0,
       name: '',
     };
   }
-  test.countries.push(country.alpha3Code);
-  test.population += country.population;
-  test.area += country.area;
-  test.name = country.languages[0].nativeName;
+  countriesFromRegions[region].languages[country.languages[0].iso639_1].countries.push(country.alpha3Code);
+  countriesFromRegions[region].languages[country.languages[0].iso639_1].population += country.population;
+  countriesFromRegions[region].languages[country.languages[0].iso639_1].area += country.area;
+  countriesFromRegions[region].languages[country.languages[0].iso639_1].name = country.languages[0].nativeName;
 }
 
 const providerDataCountries = (country: CountryList, region: string) => {
