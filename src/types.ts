@@ -3,6 +3,10 @@ export interface CountryList {
   population: number;
   regionalBlocs?: { acronym: string }[];
   area: number;
+  nativeName: string;
+  currencies: { name: string }[];
+  languages: { iso639_1: string, nativeName: string }[];
+  alpha3Code: string;
 }
 
 export interface Storage {
@@ -46,4 +50,18 @@ export interface ServicesCountries {
   getCountriesWithoutLetter(arr: CountryList[], key: string): CountryList[];
   sortByProperty(arr: CountryList[], key: string): CountryList[];
   sumByProperty(arr: CountryList[], numCountries: number, property: string): number;
+}
+
+export interface CountriesDivision {
+  EU: CountriesRegion;
+  NAFTA: CountriesRegion;
+  AU: CountriesRegion;
+  other: CountriesRegion;
+}
+
+export interface CountriesRegion {
+  countries: string[];
+  population: number;
+  languages: {};
+  currencies: string[];
 }
