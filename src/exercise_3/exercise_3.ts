@@ -30,10 +30,16 @@ const countriesFromRegions: CountriesDivision = {
     currencies: []
   },
 }
-const sortCountryNames = (a: string, b: string) => {
+const sortHelper = (a: string, b: string) => {
   if (a > b) return -1;
   if (a < b) return 1;
   return 0
+}
+
+const sortCountriesNames = (obj: CountriesDivision) => {
+  for (const region in obj) {
+    obj[region].countries.sort(sortHelper);
+  }
 }
 const checkPropertyRepeats = (country: CountryList, region: string, property: string) => {
   if (!country[property]) {
@@ -65,7 +71,6 @@ const providerDataCountries = (country: CountryList, region: string) => {
   countriesFromRegions[region].population += country.population;
   checkPropertyRepeats(country, region, 'currencies',);
   checkAndSaveLanguages(country, region);
-  countriesFromRegions[region].countries.sort(sortCountryNames);
 }
 
 const validateBlocs = (region: string): boolean => {
@@ -84,4 +89,5 @@ const splitCountries = (countries: CountryList[]) => {
 }
 
 splitCountries(countryList);
+sortCountriesNames(countriesFromRegions);
 console.log(countriesFromRegions);
