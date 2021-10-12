@@ -60,10 +60,11 @@ const checkAndSaveLanguages = (country: CountryList, region: string) => {
       name: '',
     };
   }
-  countriesFromRegions[region].languages[country.languages[0].iso639_1].countries.push(country.alpha3Code);
-  countriesFromRegions[region].languages[country.languages[0].iso639_1].population += country.population;
-  countriesFromRegions[region].languages[country.languages[0].iso639_1].area += country.area;
-  countriesFromRegions[region].languages[country.languages[0].iso639_1].name = country.languages[0].nativeName;
+  let language = countriesFromRegions[region].languages[country.languages[0].iso639_1];
+  language.countries.push(country.alpha3Code);
+  language.population += country.population;
+  language.area += country.area;
+  language.name = country.languages[0].nativeName;
 }
 
 const providerDataCountries = (country: CountryList, region: string) => {
