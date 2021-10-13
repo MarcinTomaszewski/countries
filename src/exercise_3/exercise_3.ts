@@ -1,94 +1,84 @@
-import dataFromStorage from "../dataStorage";
+import { countryList } from "../dataStorage";
 import { CountriesDivision, CountryList } from "../types";
 
-const { countryList } = dataFromStorage;
-const OTHER_BLOCS = 'other';
+const REGIONAL_BLOCS = ['EU', 'AU', 'NAFTA', 'other'];
 
-const countriesFromRegions: CountriesDivision = {
-  EU: {
-    countries: [],
-    population: 0,
-    languages: {},
-    currencies: []
-  },
-  NAFTA: {
-    countries: [],
-    population: 0,
-    languages: {},
-    currencies: []
-  },
-  AU: {
-    countries: [],
-    population: 0,
-    languages: {},
-    currencies: []
-  },
-  other: {
-    countries: [],
-    population: 0,
-    languages: {},
-    currencies: []
-  },
-}
-const sortHelper = (a: string, b: string) => {
-  if (a > b) return -1;
-  if (a < b) return 1;
-  return 0
+const createObj = (regional: string[]): CountriesDivision | {} => {
+  let obj = {};
+  regional.forEach(region => {
+    obj[region] = {
+      countries: [],
+      population: 0,
+      languages: {},
+      currencies: []
+    }
+  })
+  return obj;
 }
 
-const sortCountriesNames = (obj: CountriesDivision) => {
+const sortCountriesNames = (obj: CountriesDivision | {}) => {
   for (const region in obj) {
-    obj[region].countries.sort(sortHelper);
+    obj[region].countries.sort((a: string, b: string) => {
+      if (a > b) return -1;
+      if (a < b) return 1;
+      return 0;
+    });
   }
 }
-const checkPropertyRepeats = (country: CountryList, region: string, property: string) => {
-  if (!country[property]) {
-    return;
+
+const checkAndSaveCurrencies = (country: CountryList, region: string) => {
+  let countryRegion = countriesFromRegions[region];
+  if (!country.currencies || countryRegion.currencies.includes(country.currencies[0].name)) {
+    return countryRegion.currencies;
   }
-  if (countriesFromRegions[region][property].includes(country[property][0].name)) {
-    return;
-  }
-  countriesFromRegions[region][property].push(country[property][0].name);
+
+  let currenciesName = country.currencies[0].name;
+  return [...countryRegion.currencies, currenciesName];
 }
 
 const checkAndSaveLanguages = (country: CountryList, region: string) => {
-  if (!countriesFromRegions[region].languages[country.languages[0].iso639_1]) {
-    countriesFromRegions[region].languages[country.languages[0].iso639_1] = {
+  let countryRegion = countriesFromRegions[region];
+  let checkLanguage = countryRegion.languages[country.languages[0].iso639_1];
+  if (!checkLanguage) {
+    countryRegion.languages[country.languages[0].iso639_1] = {
       countries: [],
       population: 0,
       area: 0,
       name: '',
     };
   }
-  let language = countriesFromRegions[region].languages[country.languages[0].iso639_1];
+  let language = countryRegion.languages[country.languages[0].iso639_1];
   language.countries.push(country.alpha3Code);
   language.population += country.population;
   language.area += country.area;
   language.name = country.languages[0].nativeName;
+  return countryRegion.languages;
 }
 
 const providerDataCountries = (country: CountryList, region: string) => {
-  countriesFromRegions[region].countries.push(country.nativeName);
-  countriesFromRegions[region].population += country.population;
-  checkPropertyRepeats(country, region, 'currencies',);
-  checkAndSaveLanguages(country, region);
+  let countryRegion = countriesFromRegions[region];
+  countryRegion.countries.push(country.nativeName);
+  countryRegion.population += country.population;
+  countryRegion.currencies = checkAndSaveCurrencies(country, region);
+  countryRegion.languages = checkAndSaveLanguages(country, region);
 }
 
 const validateBlocs = (region: string): boolean => {
-  return region === 'EU' || region === 'AU' || region === 'NAFTA';
+  return ['EU', 'AU', 'NAFTA'].includes(region);
 }
+
 const splitCountries = (countries: CountryList[]) => {
   countries.forEach(country => {
+    let blocs = REGIONAL_BLOCS.at(-1);
     if (country.regionalBlocs) {
       const regionBlocs = country.regionalBlocs[0].acronym;
-      if (validateBlocs(regionBlocs)) providerDataCountries(country, regionBlocs);
-      else providerDataCountries(country, OTHER_BLOCS);
-    } else {
-      providerDataCountries(country, OTHER_BLOCS);
+      if (validateBlocs(regionBlocs)) blocs = regionBlocs;
     }
+    providerDataCountries(country, blocs);
   });
 }
 
+const countriesFromRegions: CountriesDivision | {} = createObj(REGIONAL_BLOCS);
 splitCountries(countryList);
 sortCountriesNames(countriesFromRegions);
-console.log(countriesFromRegions);
+console.log(countriesFromRegions)
