@@ -12,4 +12,5 @@ const dataFromStorage: Storage = {
   countryList: list ? JSON.parse(list) : undefined
 };
 
+export const { time, countryList } = dataFromStorage;
 export default dataFromStorage;
