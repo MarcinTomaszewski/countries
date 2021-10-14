@@ -4,7 +4,7 @@ import { CountriesDivision, CountryList } from "../types";
 const REGIONAL_BLOCS = ['EU', 'AU', 'NAFTA', 'other'];
 
 const createObj = (regional: string[]): CountriesDivision | {} => {
-  let obj = {};
+  let obj: CountriesDivision | {} = {};
   regional.forEach(region => {
     obj[region] = {
       countries: [],
@@ -26,41 +26,61 @@ const sortCountriesNames = (obj: CountriesDivision | {}) => {
   }
 }
 
-const checkAndSaveCurrencies = (country: CountryList, region: string) => {
+const checkAndSaveCurrencies = (country: CountryList, region: string): string[] => {
   let countryRegion = countriesFromRegions[region];
-  if (!country.currencies || countryRegion.currencies.includes(country.currencies[0].name)) {
+  if (!country.currencies) {
     return countryRegion.currencies;
   }
 
-  let currenciesName = country.currencies[0].name;
-  return [...countryRegion.currencies, currenciesName];
+  let currenciesNames: string[] = [];
+  country.currencies.forEach(currencies => {
+    if (!countryRegion.currencies.includes(currencies.name)) {
+      currenciesNames.push(currencies.name);
+    }
+  });
+  return [...countryRegion.currencies, ...currenciesNames];
 }
 
-const checkAndSaveLanguages = (country: CountryList, region: string) => {
+const checkAndSaveLanguages = (country: CountryList, region: string): string[] => {
   let countryRegion = countriesFromRegions[region];
-  let checkLanguage = countryRegion.languages[country.languages[0].iso639_1];
-  if (!checkLanguage) {
-    countryRegion.languages[country.languages[0].iso639_1] = {
-      countries: [],
-      population: 0,
-      area: 0,
-      name: '',
-    };
-  }
-  let language = countryRegion.languages[country.languages[0].iso639_1];
-  language.countries.push(country.alpha3Code);
-  language.population += country.population;
-  language.area += country.area;
-  language.name = country.languages[0].nativeName;
+  country.languages.forEach((languageObj, index) => {
+    let checkLanguage = countryRegion.languages[country.languages[index].iso639_1];
+    if (!checkLanguage) {
+      countryRegion.languages[country.languages[index].iso639_1] = {
+        countries: [],
+        population: 0,
+        area: 0,
+        name: '',
+      };
+    }
+    let language = countryRegion.languages[languageObj.iso639_1];
+    language.countries.push(country.alpha3Code);
+    language.population += country.population;
+    language.area += country.area;
+    language.name = languageObj.nativeName;
+
+  })
   return countryRegion.languages;
 }
 
-const providerDataCountries = (country: CountryList, region: string) => {
+const saveDataCountryInObj = (country: CountryList, region: string) => {
   let countryRegion = countriesFromRegions[region];
   countryRegion.countries.push(country.nativeName);
   countryRegion.population += country.population;
   countryRegion.currencies = checkAndSaveCurrencies(country, region);
   countryRegion.languages = checkAndSaveLanguages(country, region);
+}
+
+const providerDataCountries = (country: CountryList, regions: string[]) => {
+  if (!country.regionalBlocs) {
+    saveDataCountryInObj(country, regions.at(-1));
+    return;
+  }
+  country.regionalBlocs.forEach(blocs => {
+    let regionBlocs = regions.at(-1);
+    if (validateBlocs(blocs.acronym)) regionBlocs = blocs.acronym;
+    saveDataCountryInObj(country, regionBlocs);
+  });
 }
 
 const validateBlocs = (region: string): boolean => {
@@ -69,16 +89,11 @@ const validateBlocs = (region: string): boolean => {
 
 const splitCountries = (countries: CountryList[]) => {
   countries.forEach(country => {
-    let blocs = REGIONAL_BLOCS.at(-1);
-    if (country.regionalBlocs) {
-      const regionBlocs = country.regionalBlocs[0].acronym;
-      if (validateBlocs(regionBlocs)) blocs = regionBlocs;
-    }
-    providerDataCountries(country, blocs);
+    providerDataCountries(country, REGIONAL_BLOCS);
   });
 }
 
 const countriesFromRegions: CountriesDivision | {} = createObj(REGIONAL_BLOCS);
 splitCountries(countryList);
 sortCountriesNames(countriesFromRegions);
-console.log(countriesFromRegions)
+console.log(countriesFromRegions);
