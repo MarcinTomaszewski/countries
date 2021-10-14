@@ -43,10 +43,10 @@ const checkAndSaveCurrencies = (country: CountryList, region: string): string[] 
 
 const checkAndSaveLanguages = (country: CountryList, region: string): string[] => {
   let countryRegion = countriesFromRegions[region];
-  country.languages.forEach((languageObj, index) => {
-    let checkLanguage = countryRegion.languages[country.languages[index].iso639_1];
+  country.languages.forEach((languageObj) => {
+    let checkLanguage = countryRegion.languages[languageObj.iso639_1];
     if (!checkLanguage) {
-      countryRegion.languages[country.languages[index].iso639_1] = {
+      countryRegion.languages[languageObj.iso639_1] = {
         countries: [],
         population: 0,
         area: 0,
