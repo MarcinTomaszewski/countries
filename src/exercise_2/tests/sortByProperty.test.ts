@@ -2,7 +2,7 @@ import { servicesCountryList } from "../../utils/servicesCountryList";
 import { countryListForSort } from "./dataForTestExe2";
 const { sortByProperty } = servicesCountryList;
 
-const firstCountries: [string, string][] = [['population', 'Swiden'], ['area', 'Belgium']];
+const firstCountries: [string, string][] = [['population', 'Sweden'], ['area', 'Belgium']];
 const lastCountries: [string, string][] = [['population', 'Czech'], ['area', 'Czech']];
 
 describe('sort countries by propety', () => {

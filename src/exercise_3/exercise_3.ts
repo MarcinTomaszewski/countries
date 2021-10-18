@@ -1,9 +1,9 @@
 import { countryList } from "../dataStorage";
 import { CountriesDivision, CountryList } from "../types";
 
-const REGIONAL_BLOCS = ['EU', 'AU', 'NAFTA', 'other'];
+export const REGIONAL_BLOCS = ['EU', 'AU', 'NAFTA', 'other'];
 
-const createObj = (regional: string[]): CountriesDivision | {} => {
+export const createObj = (regional: string[]): CountriesDivision | {} => {
   let obj: CountriesDivision | {} = {};
   regional.forEach(region => {
     obj[region] = {
@@ -17,7 +17,7 @@ const createObj = (regional: string[]): CountriesDivision | {} => {
   return obj;
 }
 
-const sortCountriesNames = (obj: CountriesDivision | {}) => {
+export const sortCountriesNames = (obj: CountriesDivision | {}) => {
   for (const region in obj) {
     obj[region].countries.sort((a: string, b: string) => {
       if (a > b) return -1;
@@ -27,7 +27,7 @@ const sortCountriesNames = (obj: CountriesDivision | {}) => {
   }
 }
 
-const checkAndSaveCurrencies = (country: CountryList, region: string): string[] => {
+export const checkAndSaveCurrencies = (country: CountryList, region: string): string[] => {
   let countryRegion = countriesFromRegions[region];
   if (!country.currencies) {
     return countryRegion.currencies;
@@ -42,7 +42,7 @@ const checkAndSaveCurrencies = (country: CountryList, region: string): string[] 
   return [...countryRegion.currencies, ...currenciesNames];
 }
 
-const checkAndSaveLanguages = (country: CountryList, region: string): string[] => {
+export const checkAndSaveLanguages = (country: CountryList, region: string): string[] => {
   let countryRegion = countriesFromRegions[region];
   country.languages.forEach((languageObj) => {
     let checkLanguage = countryRegion.languages[languageObj.iso639_1];
@@ -64,7 +64,7 @@ const checkAndSaveLanguages = (country: CountryList, region: string): string[] =
   return countryRegion.languages;
 }
 
-const checkArea = (country: CountryList, region: string) => {
+export const checkArea = (country: CountryList, region: string) => {
   let countryRegion = countriesFromRegions[region];
   if (!country.area) {
     return countryRegion.area;
@@ -72,7 +72,7 @@ const checkArea = (country: CountryList, region: string) => {
   return countryRegion.area += country.area;
 }
 
-const saveDataCountryInObj = (country: CountryList, region: string) => {
+export const saveDataCountryInObj = (country: CountryList, region: string) => {
   let countryRegion = countriesFromRegions[region];
   countryRegion.countries.push(country.nativeName);
   countryRegion.population += country.population;
@@ -81,7 +81,7 @@ const saveDataCountryInObj = (country: CountryList, region: string) => {
   countryRegion.languages = checkAndSaveLanguages(country, region);
 }
 
-const providerDataCountries = (country: CountryList, regions: string[]) => {
+export const providerDataCountries = (country: CountryList, regions: string[]) => {
   if (!country.regionalBlocs) {
     saveDataCountryInObj(country, regions.at(-1));
     return;
@@ -93,11 +93,11 @@ const providerDataCountries = (country: CountryList, regions: string[]) => {
   });
 }
 
-const validateBlocs = (region: string): boolean => {
+export const validateBlocs = (region: string): boolean => {
   return ['EU', 'AU', 'NAFTA'].includes(region);
 }
 
-const splitCountries = (countries: CountryList[]) => {
+export const splitCountries = (countries: CountryList[]) => {
   countries.forEach(country => {
     providerDataCountries(country, REGIONAL_BLOCS);
   });
@@ -108,7 +108,7 @@ splitCountries(countryList);
 sortCountriesNames(countriesFromRegions);
 console.log(countriesFromRegions);
 
-const getResults = (obj: CountriesDivision | {}, property: string, place: number) => {
+export const getResults = (obj: CountriesDivision | {}, property: string, place: number) => {
   let organization: [string, number] | [string, string[]][] = [];
   for (let [key, value] of Object.entries(obj)) {
     if (obj.hasOwnProperty(key)) {
@@ -135,7 +135,7 @@ const getResults = (obj: CountriesDivision | {}, property: string, place: number
   return organization[place];
 }
 
-const getNativeName = (obj: CountriesDivision | {}, property: string, track: string, place: number) => {
+export const getNativeName = (obj: CountriesDivision | {}, property: string, track: string, place: number) => {
   let organization: { name: string, countries?: string[], population?: number, area?: number }[] = [];
   for (let key in obj) {
     if (obj.hasOwnProperty(key)) {
@@ -149,13 +149,12 @@ const getNativeName = (obj: CountriesDivision | {}, property: string, track: str
         }
       }
     }
-
-    let result = track === 'largestNumCountries' ? organization.sort((a, b) => b.countries.length - a.countries.length) : organization.sort((a, b) => a.population - b.population);
-    return result[place];
   }
+  let result = track === 'largestNumCountries' ? organization.sort((a, b) => b.countries.length - a.countries.length) : organization.sort((a, b) => a.population - b.population);
+  return result[place];
 }
 
-const getNamesLanguagesFromAreas = (obj: CountriesDivision | {}, property: string, size?: string) => {
+export const getNamesLanguagesFromAreas = (obj: CountriesDivision | {}, property: string, size?: string) => {
   let organization: [string, number] | [string, string[]][] = [];
   for (let key in obj) {
     if (obj.hasOwnProperty(key)) {
@@ -172,10 +171,12 @@ const getNamesLanguagesFromAreas = (obj: CountriesDivision | {}, property: strin
 
   if (size === 'largeArea') {
     for (const [key, value] of Object.entries(obj[largeArea].languages)) {
+      // @ts-ignore 
       nativeNames.push(value.name)
     }
   } else if (size === 'smallArea') {
     for (const [key, value] of Object.entries(obj[smallArea].languages)) {
+      // @ts-ignore 
       nativeNames.push(value.name)
     }
   }

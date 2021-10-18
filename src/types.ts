@@ -3,10 +3,10 @@ export interface CountryList {
   population: number;
   regionalBlocs?: { acronym: string }[];
   area: number;
-  nativeName: string;
-  currencies: { name: string }[];
-  languages: { iso639_1: string, nativeName: string }[];
-  alpha3Code: string;
+  nativeName?: string;
+  currencies?: { name: string }[];
+  languages?: { iso639_1: string, nativeName: string }[];
+  alpha3Code?: string;
 }
 
 export interface Storage {
