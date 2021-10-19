@@ -62,6 +62,14 @@ export interface CountriesDivision {
 export interface CountriesRegion {
   countries: string[];
   population: number;
-  languages: {};
+  languages: {
+    [key: string]: {
+      countries: string[];
+      population: number;
+      area: number;
+      name: string;
+    }
+  };
   currencies: string[];
+  area: number;
 }

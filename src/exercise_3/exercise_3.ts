@@ -1,4 +1,3 @@
-import { countryList } from "../dataStorage";
 import { CountriesDivision, CountryList } from "../types";
 
 export const REGIONAL_BLOCS = ['EU', 'AU', 'NAFTA', 'other'];
@@ -27,7 +26,7 @@ export const sortCountriesNames = (obj: CountriesDivision | {}) => {
   }
 }
 
-export const checkAndSaveCurrencies = (country: CountryList, region: string): string[] => {
+export const checkCurrencies = (country: CountryList, region: string): string[] => {
   let countryRegion = countriesFromRegions[region];
   if (!country.currencies) {
     return countryRegion.currencies;
@@ -42,7 +41,7 @@ export const checkAndSaveCurrencies = (country: CountryList, region: string): st
   return [...countryRegion.currencies, ...currenciesNames];
 }
 
-export const checkAndSaveLanguages = (country: CountryList, region: string): string[] => {
+export const checkLanguages = (country: CountryList, region: string): string[] => {
   let countryRegion = countriesFromRegions[region];
   country.languages.forEach((languageObj) => {
     let checkLanguage = countryRegion.languages[languageObj.iso639_1];
@@ -72,24 +71,24 @@ export const checkArea = (country: CountryList, region: string) => {
   return countryRegion.area += country.area;
 }
 
-export const saveDataCountryInObj = (country: CountryList, region: string) => {
-  let countryRegion = countriesFromRegions[region];
+export const saveDataCountryInObj = (obj: CountriesDivision | {}, country: CountryList, region: string) => {
+  let countryRegion = obj[region];
   countryRegion.countries.push(country.nativeName);
   countryRegion.population += country.population;
   countryRegion.area = checkArea(country, region);
-  countryRegion.currencies = checkAndSaveCurrencies(country, region);
-  countryRegion.languages = checkAndSaveLanguages(country, region);
+  countryRegion.currencies = checkCurrencies(country, region);
+  countryRegion.languages = checkLanguages(country, region);
 }
 
-export const providerDataCountries = (country: CountryList, regions: string[]) => {
+export const providerDataCountries = (obj: CountriesDivision | {}, country: CountryList, regions: string[]) => {
   if (!country.regionalBlocs) {
-    saveDataCountryInObj(country, regions.at(-1));
+    saveDataCountryInObj(obj, country, regions.at(-1));
     return;
   }
   country.regionalBlocs.forEach(blocs => {
     let regionBlocs = regions.at(-1);
     if (validateBlocs(blocs.acronym)) regionBlocs = blocs.acronym;
-    saveDataCountryInObj(country, regionBlocs);
+    saveDataCountryInObj(obj, country, regionBlocs);
   });
 }
 
@@ -97,16 +96,13 @@ export const validateBlocs = (region: string): boolean => {
   return ['EU', 'AU', 'NAFTA'].includes(region);
 }
 
-export const splitCountries = (countries: CountryList[]) => {
+export const splitCountries = (countries: CountryList[], obj: CountriesDivision | {}) => {
   countries.forEach(country => {
-    providerDataCountries(country, REGIONAL_BLOCS);
+    providerDataCountries(obj, country, REGIONAL_BLOCS);
   });
 }
 
-const countriesFromRegions: CountriesDivision | {} = createObj(REGIONAL_BLOCS);
-splitCountries(countryList);
-sortCountriesNames(countriesFromRegions);
-console.log(countriesFromRegions);
+export const countriesFromRegions: CountriesDivision | {} = createObj(REGIONAL_BLOCS);
 
 export const getResults = (obj: CountriesDivision | {}, property: string, place: number) => {
   let organization: [string, number] | [string, string[]][] = [];
@@ -137,15 +133,12 @@ export const getResults = (obj: CountriesDivision | {}, property: string, place:
 
 export const getNativeName = (obj: CountriesDivision | {}, property: string, track: string, place: number) => {
   let organization: { name: string, countries?: string[], population?: number, area?: number }[] = [];
+  let propertyValue = track === 'largestNumCountries' ? 'countries' : 'population';
   for (let key in obj) {
     if (obj.hasOwnProperty(key)) {
       if (key !== 'other') {
-        for (let test in obj[key][property]) {
-          if (track === 'largestNumCountries') {
-            organization.push({ name: obj[key][property][test].name, countries: obj[key][property][test].countries });
-          } else if (track === 'smallestNumPeople') {
-            organization.push({ name: obj[key][property][test].name, population: obj[key][property][test].population });
-          }
+        for (let language in obj[key][property]) {
+          organization.push({ name: obj[key][property][language].name, [propertyValue]: obj[key][property][language][propertyValue] });
         }
       }
     }
@@ -165,54 +158,13 @@ export const getNamesLanguagesFromAreas = (obj: CountriesDivision | {}, property
   }
 
   organization.sort((a: any, b: any) => b[1] - a[1]);
-  const largeArea = organization[0][0];
-  const smallArea = organization[2][0];
+  let sizeArea = size === 'largeArea' ? organization[0][0] : organization[2][0];
   const nativeNames: string[] = [];
 
-  if (size === 'largeArea') {
-    for (const [key, value] of Object.entries(obj[largeArea].languages)) {
-      // @ts-ignore 
-      nativeNames.push(value.name)
-    }
-  } else if (size === 'smallArea') {
-    for (const [key, value] of Object.entries(obj[smallArea].languages)) {
-      // @ts-ignore 
-      nativeNames.push(value.name)
-    }
+  for (const [key, value] of Object.entries(obj[sizeArea].languages)) {
+    // @ts-ignore
+    nativeNames.push(value.name)
   }
+
   return nativeNames;
 }
-
-const textForConsole = {
-  sizePopulation: {
-    largest: 'Organizacja o największej liczbie populacji: ',
-    secondPlace: 'Organizacja zajmująca drugie miejsce pod względem wielkości populacji: '
-  },
-  thirdLargestArea: 'Organizacja zajmująca trzecie miejsce pod względem wielkości obszaru: ',
-  numberLanguages: {
-    largest: `Organizacja z największą liczbą języków: `,
-    smallest: `Organizacja z najmniejszą liczbą języków: `,
-  },
-  largestNumberCurrencies: 'Organizacja o największej liczbie walut: ',
-  mallestNumberMemberStates: 'Organizacja o najmniejszej liczbie państw członkowskich: ',
-  nativeNameLanguageGreatestNumberCountries: 'Natywna nazwa języka wykorzystywanego w najwiekszej liczbie krajów: ',
-  nativeNameLanguageUsedSmallestNumberPeople: 'Natywna nazwa języka wykorzystywanego przez najmniejszą liczbę ludności: ',
-  nativeNamesLanguagesUsedArea: {
-    largestArea: 'Natywne nazwy języków wykorzystywanych na największym obszarze: ',
-    smallestArea: 'Natywne nazwy języków wykorzystywanych na najmniejszym obszarze: '
-  }
-}
-
-const { sizePopulation, thirdLargestArea, numberLanguages, largestNumberCurrencies, mallestNumberMemberStates, nativeNameLanguageGreatestNumberCountries, nativeNameLanguageUsedSmallestNumberPeople, nativeNamesLanguagesUsedArea } = textForConsole;
-
-console.log(sizePopulation.largest, getResults(countriesFromRegions, 'population', 0));
-console.log(sizePopulation.secondPlace, getResults(countriesFromRegions, 'population', 1));
-console.log(thirdLargestArea, getResults(countriesFromRegions, 'area', 2));
-console.log(numberLanguages.largest, getResults(countriesFromRegions, 'languages', 0));
-console.log(numberLanguages.smallest, getResults(countriesFromRegions, 'languages', 2));
-console.log(largestNumberCurrencies, getResults(countriesFromRegions, 'currencies', 0));
-console.log(mallestNumberMemberStates, getResults(countriesFromRegions, 'countries', 2));
-console.log(nativeNameLanguageGreatestNumberCountries, getNativeName(countriesFromRegions, 'languages', 'largestNumCountries', 0));
-console.log(nativeNameLanguageUsedSmallestNumberPeople, getNativeName(countriesFromRegions, 'languages', 'smallestNumPeople', 0))
-console.log(nativeNamesLanguagesUsedArea.largestArea, getNamesLanguagesFromAreas(countriesFromRegions, 'area', 'largeArea'));
-console.log(nativeNamesLanguagesUsedArea.smallestArea, getNamesLanguagesFromAreas(countriesFromRegions, 'area', 'smallArea'));

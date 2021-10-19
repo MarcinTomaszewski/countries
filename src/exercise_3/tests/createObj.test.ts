@@ -1,4 +1,5 @@
-import { createObj, REGIONAL_BLOCS } from "../exercise_3";
+import { createObj } from "../exercise_3";
+import { REGIONAL_BLOCS } from "./mockValues";
 
 const obj = createObj(REGIONAL_BLOCS);
 
