@@ -39,21 +39,24 @@ const textForConsole = {
 }
 
 const { countryList } = dataFromStorage;
-splitCountries(countryList, countriesFromRegions);
-sortCountriesNames(countriesFromRegions);
-console.log(countriesFromRegions);
+
 
 const { sizePopulation, thirdLargestArea, numberLanguages, largestNumberCurrencies, mallestNumberMemberStates, nativeNameLanguageGreatestNumberCountries, nativeNameLanguageUsedSmallestNumberPeople, nativeNamesLanguagesUsedArea } = textForConsole;
+if (!countryList) console.log('Przeładuj stronę by zobaczyć wyniki z zadania 3.');
 
-console.log(sizePopulation.largest, getResults(countriesFromRegions, 'population', 0));
-console.log(sizePopulation.secondPlace, getResults(countriesFromRegions, 'population', 1));
-console.log(thirdLargestArea, getResults(countriesFromRegions, 'area', 2));
-console.log(numberLanguages.largest, getResults(countriesFromRegions, 'languages', 0));
-console.log(numberLanguages.smallest, getResults(countriesFromRegions, 'languages', 2));
-console.log(largestNumberCurrencies, getResults(countriesFromRegions, 'currencies', 0));
-console.log(mallestNumberMemberStates, getResults(countriesFromRegions, 'countries', 2));
-console.log(nativeNameLanguageGreatestNumberCountries, getNativeName(countriesFromRegions, 'languages', 'largestNumCountries', 0));
-console.log(nativeNameLanguageUsedSmallestNumberPeople, getNativeName(countriesFromRegions, 'languages', 'smallestNumPeople', 0))
-console.log(nativeNamesLanguagesUsedArea.largestArea, getNamesLanguagesFromAreas(countriesFromRegions, 'area', 'largeArea'));
-console.log(nativeNamesLanguagesUsedArea.smallestArea, getNamesLanguagesFromAreas(countriesFromRegions, 'area', 'smallArea'));
-console.log(countryList)
+if (countryList) {
+  splitCountries(countryList, countriesFromRegions);
+  sortCountriesNames(countriesFromRegions);
+  console.log(countriesFromRegions);
+  console.log(sizePopulation.largest, getResults(countriesFromRegions, 'population', 0));
+  console.log(sizePopulation.secondPlace, getResults(countriesFromRegions, 'population', 1));
+  console.log(thirdLargestArea, getResults(countriesFromRegions, 'area', 2));
+  console.log(numberLanguages.largest, getResults(countriesFromRegions, 'languages', 0));
+  console.log(numberLanguages.smallest, getResults(countriesFromRegions, 'languages', 2));
+  console.log(largestNumberCurrencies, getResults(countriesFromRegions, 'currencies', 0));
+  console.log(mallestNumberMemberStates, getResults(countriesFromRegions, 'countries', 2));
+  console.log(nativeNameLanguageGreatestNumberCountries, getNativeName(countriesFromRegions, 'languages', 'largestNumCountries', 0));
+  console.log(nativeNameLanguageUsedSmallestNumberPeople, getNativeName(countriesFromRegions, 'languages', 'smallestNumPeople', 0))
+  console.log(nativeNamesLanguagesUsedArea.largestArea, getNamesLanguagesFromAreas(countriesFromRegions, 'area', 'largeArea'));
+  console.log(nativeNamesLanguagesUsedArea.smallestArea, getNamesLanguagesFromAreas(countriesFromRegions, 'area', 'smallArea'));
+}
